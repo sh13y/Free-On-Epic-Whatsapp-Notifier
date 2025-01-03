@@ -1,3 +1,4 @@
+
 import requests
 from dotenv import load_dotenv
 import os
@@ -59,7 +60,7 @@ def send_whatsapp_notification(free_games):
         message += f"💰 *Original Price*: ${game['original_price']}\n"
         message += f"💰 *Discounted Price*: ${game['discounted_price']}\n"
         message += f"🔗 *[Claim Now]*({game['url']})\n"  # This is the clickable link
-        message += f"🕒 *Valid until*: {format_date(game['end_date'])}\n\n"
+        message += f"🕒 *Valid until*: {format_date(game['end_date'])}\n"
 
         # Send the message with image via Green API
         image_url = game['image_url']
