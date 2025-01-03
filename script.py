@@ -28,7 +28,7 @@ def fetch_free_games():
                 for offer in promo.get("promotionalOffers", []):
                     original_price = game.get("price", {}).get("totalPrice", {}).get("originalPrice", 0)
                     discounted_price = game.get("price", {}).get("totalPrice", {}).get("discountPrice", 0)
-                    if original_price == 0 and discounted_price == 0:
+                    if discounted_price == 0:
                         free_games.append({
                             "title": game.get("title"),
                             "description": game.get("description", "No description available."),
@@ -52,13 +52,13 @@ def send_whatsapp_notification(free_games):
         return
     
     for game in free_games:
-        # Create the message
+        # Create the message with clickable 'Claim Now' link
         message = "🎮 *Free Games on Epic Games Store!*\n\n"
         message += f"📌 *{game['title']}*\n"
         message += f"💬 {game['description']}\n"
-        message += f"💲 Original Price: ${game['original_price']}\n"
-        message += f"💲 Discounted Price: ${game['discounted_price']}\n"
-        message += f"🔗 [Claim Here]({game['url']})\n"
+        message += f"💰 *Original Price*: ${game['original_price']}\n"
+        message += f"💰 *Discounted Price*: ${game['discounted_price']}\n"
+        message += f"🔗 *[Claim Now]*({game['url']})\n"  # This is the clickable link
         message += f"🕒 *Valid until*: {format_date(game['end_date'])}\n\n"
 
         # Send the message with image via Green API
@@ -80,6 +80,7 @@ def send_whatsapp_notification(free_games):
                 print("WhatsApp notification with image sent successfully!")
             except requests.exceptions.RequestException as e:
                 print(f"Failed to send WhatsApp notification with image: {e}")
+
 
 def main():
     """Main function to fetch games and send notifications."""
