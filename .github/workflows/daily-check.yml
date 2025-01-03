@@ -1,0 +1,33 @@
+name: Daily Free Games Check
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs every day at midnight UTC
+  workflow_dispatch:
+
+jobs:
+  check-free-games:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run script
+      env:
+        API_URL: ${{ secrets.API_URL }}
+        GREEN_API_INSTANCE_ID: ${{ secrets.GREEN_API_INSTANCE_ID }}
+        GREEN_API_API_TOKEN: ${{ secrets.GREEN_API_API_TOKEN }}
+        WHATSAPP_NUMBER: ${{ secrets.WHATSAPP_NUMBER }}
+      run: |
+        python script.py
