@@ -1,7 +1,7 @@
 import requests
 from dotenv import load_dotenv
 import os
-from datetime import datetimea
+from datetime import datetime
 
 # Load environment variables from .env file
 load_dotenv()
