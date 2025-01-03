@@ -70,6 +70,12 @@ Green API is a service that allows you to send WhatsApp messages programmaticall
 
 For more details, check out the [Green API documentation](https://green-api.com/en/docs/).
 
+## Example Notification
+
+Here is an example of what the notification looks like:
+
+![Example Notification](assets/Screenshot_20250104-032350.png)
+
 ## Contributing
 
 Feel free to fork this repository, make improvements, and submit pull requests. Let's make this project even more awesome together! 🚀
