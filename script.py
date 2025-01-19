@@ -20,25 +20,32 @@ def fetch_free_games():
         response.raise_for_status()
         data = response.json()
     except requests.RequestException as e:
-        return f"Error fetching free games: {e}"
+        logging.error(f"Error fetching free games: {e}")
+        return []
 
     free_games = []
     for game in data.get("data", {}).get("Catalog", {}).get("searchStore", {}).get("elements", []):
         if game.get("promotions"):
             for promo in game["promotions"].get("promotionalOffers", []):
                 for offer in promo.get("promotionalOffers", []):
-                    original_price = game.get("price", {}).get("totalPrice", {}).get("originalPrice", 0)
                     discounted_price = game.get("price", {}).get("totalPrice", {}).get("discountPrice", 0)
-                    if discounted_price == 0:
-                        free_games.append({
-                            "title": game.get("title"),
-                            "description": game.get("description", "No description available."),
-                            "original_price": original_price / 100,  # Convert to dollars
-                            "discounted_price": discounted_price / 100,  # Convert to dollars
-                            "url": f"https://store.epicgames.com/en-US/p/{game.get('productSlug')}",
-                            "image_url": game.get("keyImages", [{}])[0].get("url", ""),
-                            "end_date": offer.get("endDate")
-                        })
+                    
+                    if discounted_price == 0:  # Check if it's free
+                        # Extract namespace and id for constructing the URL
+                        namespace = game.get("namespace")
+                        id_value = game.get("id")
+                        
+                        if namespace and id_value:  # Ensure both values are present
+                            purchase_url = f"https://store.epicgames.com/purchase?offers=1-{namespace}-{id_value}"
+                            free_games.append({
+                                "title": game.get("title"),
+                                "description": game.get("description", "No description available."),
+                                "original_price": "Free",
+                                "discounted_price": "Free",
+                                "url": purchase_url,
+                                "image_url": game.get("keyImages", [{}])[0].get("url", ""),
+                                "end_date": offer.get("endDate")
+                            })
     return free_games
 
 def format_date(date_str):
